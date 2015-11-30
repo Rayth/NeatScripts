@@ -1,0 +1,32 @@
+//**********************************
+//Basic Medal Hunting using the cap/release method. Simply enter the valley
+//Coordinates, hero string and number of waves. You shouldn't have to ever modify the MODIFIER variable
+//But it is there in times when evony decides to be a bitch :D
+//**********************************
+
+//Fill in values below to cap and release a valley. used for medal farming.
+VALC = "773,90" //Coordinates of valley
+HERO = "any,!mayor,!trainer" //Hero string for attack
+WAVES = 3 //Number of waves to have at a time.
+MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1
+
+//------------STOP EDITING------------
+TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:8000,c:1,b:1,t:50","wo:1,w:1,s:1,p:1,sw:1,a:12800,c:1,b:10,t:50","wo:1,w:1,s:1,p:1,sw:1,a:25000,c:1,b:150,t:100"]
+
+label gettroops
+id = GetFieldId(VALC)
+lev = GetLevel(id)
+TRP = TROOPS[lev-1]
+//TRP = "wo:1,w:1,s:1,p:1,sw:1,a:32000,c:1,b:150,t:100"
+if (TRP == null) goto gettroops
+echo "Troops are: " + TRP
+journeyTime = city.getTravelTime(city.fieldId, GetFieldId(VALC), GetTroops(TRP), 5) * MODIFIER
+waittime = round( journeyTime * 2 / WAVES + 2)
+
+label doIt
+execute "abandon " + VALC
+repeat 1
+sleep 3
+execute "attack " + VALC + " " + HERO + " " + TRP
+execute "sleep " + waittime
+loop doIt
