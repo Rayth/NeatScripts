@@ -1,0 +1,14 @@
+//*********************
+//By Rayth
+//Use this script to transport to another player.  
+//Simply put the troops you wish to use and the type of res 
+//and it will automatically calculate
+//The maximum load it can send. This will only send 1 type of resource at a time.
+/*********************
+TRP = "c:10k" //Specify troops to transport
+RES = "w" //Res type ONLY.
+DEST = "87,279"
+//---- STOP EDITING ----//
+
+bean = GetTroops(TRP)
+execute "transport " + DEST + " " + TRP + " " + RES + ":" + city.getCarryingLoad(bean)
