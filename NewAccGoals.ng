@@ -1,0 +1,114 @@
+//*********************************
+// City Goals
+//*********************************
+// Comforting and Tax
+config comfort:1
+comfortpolicy 15 15 pray
+taxpolicy 20 100
+// Production Rate
+production 100 100 100 100
+// distancepolicy npc_farm_dist npc_build_dist medal_farm_dist valley_vap map
+distancepolicy 10 10 7 30 12
+
+// Other City Goals
+rallypolicy n:5:3 b:5:3 v:3 t:1 r:1
+reportstokeep 1 a:300 b:1 a:3k a:10k
+
+//*********************************
+// Defense Goals
+//*********************************
+config attackgap:6
+config defensecooldown:30
+
+defensepolicy /junktroop:1000 /usespeech:1 /usetruce:6 /usewarhorn:0 /usecorselet:0 /usepenicillin:0
+config embassy:2
+config gate:0.5
+gatepolicy 2 1 0 1 2
+
+//*********************************
+// Trade Goals
+//*********************************
+config trade:1
+tradepolicy /type:gold /min:1d
+tradepolicy /type:food /min:3d /max:7d /batch:1
+tradepolicy /type:wood /min:25k /max:100k /batch:1
+tradepolicy /type:stone /min:5k /max:50k /batch:1
+tradepolicy /type:iron /min:10k /max:30k /batch:1
+
+//*********************************
+// Hero Goals
+//*********************************
+config hero:21
+keepheroes any:base>70
+
+//*********************************
+// Valley Goals
+//*********************************
+config valley:10,valleymin:1
+#safevalleyfarm 1,2,3,4,5,6,7,8,9,10
+valleyheroes any:attack>60
+
+//*********************************
+// NPC Goals
+//*********************************
+// Build NPC's
+config buildnpc:15,acquireflats:1,abandonflats:1
+npcbuildpolicy /level:10 /mindistance:1 /maxdistance:3
+npcbuildpolicy /level:5 /mindistance:1 /maxdistance:7
+
+// Farm NPC's
+config npc:5
+npctroops 5 b:550
+npcheroes 5 trainer,!mayor
+farmingpolicy 5 /mindistance:1 /maxdistance:15 /farmingcycle:8.1
+
+//*********************************
+// Building and Research Goals
+//*********************************
+build c:2:1
+build inn:1
+build f:1:1,s:1:1,i:1:1,q:1:1
+build s:2:1
+build c:1:4
+build c:2:3
+build r:1
+build b:1
+build fh:1
+build m:1
+build wh:1
+build t:2
+build a:1
+build e:1
+build q:2:1,i:3:1
+build fo:2,ws:1
+build f:2:1
+build w:1
+build be:3
+build w:2
+build a:2
+build f:5
+build st:1
+build b:2:1
+build c:1:5
+
+research ag:1,lu:1
+research ag:2,lu:2,ms:1
+research mas:1,mi:2,mt:1,ag:1,lu:3
+
+//*********************************
+// Troop Goals
+//*********************************
+config troopqueuetime:0.5
+config troopsusereserved:0
+config troopsusepopmax:0,troopincrement:0
+
+//Build troops to complete quests.
+troop wo:250,w:500,s:10,p:10,sw:10,a:500
+
+
+//*********************************
+// Fortifications
+//*********************************
+config wallqueuetime:0.25
+config fortsusereserved:0
+fortification tra:10
