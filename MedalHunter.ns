@@ -8,7 +8,9 @@
 VALC = "773,90" //Coordinates of valley
 HERO = "any,!mayor,!trainer" //Hero string for attack
 WAVES = 3 //Number of waves to have at a time.
-MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1
+
+//The following should not need edited. If "Lost in the Wastes" is used against you, change this to 1.2
+MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1.
  
 //------------STOP EDITING------------
 TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:8000,c:1,b:1","wo:1,w:1,s:1,p:1,sw:1,a:12800,c:1,b:10","wo:1,w:1,s:1,p:1,sw:1,a:25000,c:1,b:150"]
