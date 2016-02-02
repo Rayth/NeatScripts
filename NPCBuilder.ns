@@ -1,0 +1,65 @@
+//----------------------------------------
+//Name: NPC Builder Script by Rayth
+//Desc: Finds flats, makes city and
+//      returns workers with res before
+//      abandoning the city.
+//----------------------------------------
+//Script Settings
+//----------------------------------------
+FLAT_LVL = 4 //Define level of NPC to build.
+CAP_TROOP = "w:1,s:1,p:1,sw:1,c:1,a:400" //Troops to cap the flat
+HERO_STR = "any,!mayor" //Hero string
+BLD_DISTANCE = 7 //Max distance to build flats.
+
+//----------------------------------------
+//Do not edit below
+//----------------------------------------
+castlecount = m_context.Player.playerInfo.castleCount
+config valley:0,buildnpc:0
+execute "scanmap " + city.coords + " " + BLD_DISTANCE
+flats = FindField(city.x,city.y,BLD_DISTANCE,10,FLAT_LVL).sort(city.compareByDistanceToCastle)
+c = flats.length
+label startBuilding
+if (c = flats.length-1) goto endBuild
+c = c-1
+dummy=UpdateDetailInfo(flats[c])
+det=GetDetailInfo(flats[c])
+if !det repeat 10
+if !det echo "Failed to get information for flat. Ending Script."
+if !det goto endBuild
+echo "Checking flat "+FieldIdToCoords(flats[c])
+if (det.relation != 1) echo "Building NPC at " + det.coords
+if (det.relation != 1) goto getFlat
+echo "Skipping flat owned by friendly:
+goto startBuilding
+
+label getFlat
+if (det.relation = 0) goto buildNPC
+if (city.fields.length = city.getTownHallLevel()) execute "abandon " + city.fields[city.fields.length-1].coords
+sleep 3
+if (det.relation = 6) attack_time = city.getTravelTime(city.fieldId, flats[c], GetTroops(CAP_TROOP), 5)
+if (det.relation = 6) execute "attack " + det.coords + " " + HERO_STR + " " + CAP_TROOP
+if (det.relation < 6) attack_time = city.getTravelTime(city.fieldId, flats[c], GetTroops("s:1"), 5)
+if (det.relation < 6) execute "attack " + det.coords + " " + HERO_STR + " s:1"
+waittime = attack_time + 20
+execute "sleep " + waittime
+goto buildNPC
+
+label buildNPC
+bld_time = city.getTravelTime(city.fieldId, flats[c], GetTroops("w:250"), 5)
+waittime = bld_time + 300
+execute "buildcity " + det.coords
+execute "sleep " + waittime
+goto emptyNPC
+
+label emptyNPC
+dummy = cities[castlecount].cityManager.script.callScript("create r")
+sleep 5
+evacTime = city.getTravelTime(det.fieldId, city.fieldId, GetTroops("w:250"), 2) + 20
+dummy = cities[castlecount].cityManager.script.callScript("reinforce " + city.coords + " none wo:250 f:4k,w:4k,s:4k,i:4k,g:4k")
+execute "sleep " + evacTime
+execute "abandontown " + det.coords
+goto startBuilding
+
+label endBuild
+Echo "NPC Building Completed"

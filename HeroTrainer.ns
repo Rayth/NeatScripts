@@ -1,0 +1,46 @@
+label autorun
+//***********
+//LV10 NPC Hero Trainer
+//***********
+HERO = "Trebator" //Set Hero name here
+TYPE = "cav" //cav or arch training. Transports are not used to optimise speed.
+RADIUS = 15 //How far out to look for NPC's.
+//***********
+//STOP EDITING
+//***********
+TROOPS = TYPE.substr(0, 1) + ":" + (city.getMaxArmySize() - 5k) + ",s:5k"
+echo "Troops are: " + TROOPS
+
+echo "Finding NPC's to train on"
+NPCS = FindField(city.x,city.y,RADIUS,12,10).sort(city.compareByDistanceToCastle)
+echo "Found "+NPCS.length+" Level 10 NPCs within "+RADIUS+" miles."
+if NPCS.length < 1 goto noNPCS
+echo "Preparing to farm."
+
+label setup
+TIME = date().getTime()
+X = 0
+
+label theLoop
+if X>=NPCS.length gosub waitForHour
+if (date().getTime() - TIME > 3600000) goto setup
+execute "attack " + FieldIdToCoords(NPCS[X++]) + " " + HERO + " " + TROOPS
+execute "waithero " + HERO
+if ( m_context.maintenanceStart > 0 ) goto sleepy
+sleep 15
+loop theLoop
+
+label waitForHour
+PAST = date().getTime() - TIME
+LEFT = 3600000-PAST
+execute "sleep " + LEFT
+return
+
+label sleepy
+if ( m_context.maintenanceStart == 0 ) goto autorun
+sleep 65
+loop sleepy
+
+label noNPCS
+echo "Found no NPC's to farm on. Ending script."
+end
