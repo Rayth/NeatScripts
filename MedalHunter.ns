@@ -46,7 +46,7 @@ if (X >= VALLEYS.length) goto decLevel
 VALC = FieldIdToCoords(VALLEYS[X])
 mcb = GetDetailInfo(VALLEYS[X])
 if (mcb == null) repeat
-if (RelationIndex(mcb) > 4 || RelationIndex(mcb) == 0) goto gettroops
+if (RelationIndex(mcb) > 4) if RelationIndex(mcb) == 0) goto gettroops
 X++
 loop checkValleys
 
