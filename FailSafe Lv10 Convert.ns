@@ -1,0 +1,155 @@
+//=======================================================
+//| DRCS Version 1.2 By FailSafe
+//|
+//|    Updates:
+//| ~ Created more dynamic options for faster and easier selections
+//|
+//|    This script offers more than one way  of converting a
+//| captured level 10 Barbarian city (NPC) into a specific resource
+//| city of your choice.
+//=======================================================
+//#
+gosub MainDemo
+//#
+//#######################################################
+//#######################################################
+//# Remove the comment character ( // ) from in front of the
+//# city you want to build. If you want an Iron city then leave it
+//# alone and just copy and paste. Otherwise, if you want a Wood
+//# city then add the comment character ( // ) in front of
+//# "//gosub iron" and remove it from "gosub Wood".
+//# --------------------- 
+//# Correct:
+//#   //gosub Iron
+//#   //gosub Food
+//#   //gosub Stone
+//#   gosub Wood
+//# ---------------------
+//# Incorrect:
+//#   gosub Iron
+//#   //gosub Food
+//#   //gosub Stone
+//#   gosub Wood
+//# ---------------------- 
+//#######################################################
+//#######################################################
+
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+//()    Below are the individual builds that your city can be 
+//() converted too.
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+// ~~~~~~Options~~~~~~~
+gosub Iron
+//gosub Food
+//gosub Stone
+//gosub Wood
+loop 1
+// ~~~~~~Options~~~~~~~
+
+
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+//() No need to edit below this, go to the very
+//() bottom if you want to specify which inner city structures you 
+//() want to demolish.
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+Label Iron
+demo quarry level10
+demo quarry 
+repeat 9
+demo lumber level10
+demo lumber
+repeat 9
+demo farm level10
+repeat 37
+demo farm
+repeat 333
+create iron
+repeat 39
+upgrade iron
+repeat 312
+gosubreturn
+// ~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~
+Label Food
+demo quarry level10
+demo quarry 
+repeat 9
+demo lumber level10
+demo lumber
+repeat 9
+demo iron level10
+demo iron
+repeat 9
+create farm
+repeat 2
+upgrade farm
+repeat 24
+gosubreturn
+// ~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~
+Label Stone
+demo lumber level10
+demo lumber
+repeat 9
+demo iron level10
+demo iron
+repeat 9
+demo farm level10
+repeat 37
+demo farm
+repeat 333
+create quarry
+repeat 39
+upgrade quarry
+repeat 312
+gosubreturn
+// ~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~
+Label Wood
+demo quarry level10
+demo quarry
+repeat 9
+demo iron level10
+demo iron
+repeat 9
+demo farm level10
+repeat 37
+demo farm
+repeat 333
+create saw
+repeat 39
+upgrade saw
+repeat 312
+gosubreturn
+// ~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+//() Below are the static commands that are ran on each city build 
+//() style. No matter what you picked above this demolishes
+//() the Forge, Workshop, Warehouse, Cottage, and Stable in the city.
+//() It will build barracks in this same section.
+//()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+// ~~~~~~~~~~~~~~~~~~
+Label MainDemo
+demo ws level10
+demo ws
+repeat 9
+demo wh level10
+demo wh
+repeat 9
+demo st level10
+demo st
+repeat 9
+demo fo level10
+demo fo
+repeat 9
+demo cottage level10
+repeat 13
+demo cottage
+repeat 117
+create barrack
+repeat 17
+upgrade barrack
+repeat 136
+gosubreturn
+// ~~~~~~~~~~~~~~~~~~~
