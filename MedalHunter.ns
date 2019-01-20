@@ -1,68 +1,27 @@
 //**********************************
-//Basic Medal Hunting using the cap/release method. Simply select valley type, level and radius
-//to search, hero string and number of waves. You shouldn't have to ever modify the MODIFIER variable
+//Basic Medal Hunting using the cap/release method. Simply enter the valley
+//Coordinates, hero string and number of waves. You shouldn't have to ever modify the MODIFIER variable
 //But it is there in times when evony decides to be a bitch :D
-//This script will search for your specified valley type and level and attack the closest one
-//If it can't find a valley at your specified level, it will look for 1 lower.
-//**********************************
-//Notes:
-//Make sure HBR or Compass doesn't increase in level while this script is running as it will ruin
-//the timing of waves
 //**********************************
 
 //Fill in values below to cap and release a valley. used for medal farming.
-HERO = "any,!mayor" //Hero string for attack
-WAVES = 4 //Number of waves to have at a time.
-VALLEYTYPE = "hill" //Type of valley to hit. Don't use Flat
-VALLEYLVL = 5
-RADIUS = 3 //Maximum distance to search
+VALC = "xxx,yyy" //Coordinates of valley
+HERO = "any" //Hero string for attack
+WAVES = 6 //Number of waves to have at a time.
+MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1
 
-//The following should not need edited. If "Lost in the Wastes" is used against you, change this to 1.2
-MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1.
- 
 //------------STOP EDITING------------
-TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:8000,c:1","wo:1,w:1,s:1,p:1,sw:1,a:12800,c:1,b:10","wo:1,w:1,s:1,p:1,sw:1,a:25000,c:1,b:150"]
-if (VALLEYTYPE == "forest") FIELDTYPE = 1
-if (VALLEYTYPE == "desert") FIELDTYPE = 2
-if (VALLEYTYPE == "hill") FIELDTYPE = 3
-if (VALLEYTYPE == "swamp") FIELDTYPE = 4
-if (VALLEYTYPE == "grassland") FIELDTYPE = 5
-if (VALLEYTYPE == "lake") FIELDTYPE = 6
-
-label findValley
-VALLEYS = FindField(city.x,city.y,RADIUS,FIELDTYPE,VALLEYLVL).sort(city.compareByDistanceToCastle)
-if (VALLEYS.length < 1) goto decLevel
-echo "Found valleys."
-X = 0
-goto checkValleys
-
-label decLevel
-echo "No valleys at Level " + VALLEYLVL + ". Trying lower level."
-VALLEYLVL = VALLEYLVL - 1
-goto findValley
-
-label checkValleys
-if (X >= VALLEYS.length) goto decLevel
-VALC = FieldIdToCoords(VALLEYS[X])
-mcb = GetDetailInfo(VALLEYS[X])
-if (mcb == null) repeat
-if (RelationIndex(mcb) > 4) if RelationIndex(mcb) == 0) goto gettroops
-X++
-loop checkValleys
-
-label EndScript
-echo "No more valleys found."
-end
+TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:8000,c:1,b:1,t:50","wo:1,w:1,s:1,p:1,sw:1,a:12800,c:1,b:10","wo:1,w:1,s:1,p:1,sw:1,a:25000,c:1,b:150"]
 
 label gettroops
-echo "Found suitable valley at " + VALC
-lev = GetLevel(VALLEYS[X])
+id = GetFieldId(VALC)
+lev = GetLevel(id)
 TRP = TROOPS[lev-1]
 if (TRP == null) goto gettroops
 echo "Troops are: " + TRP
-journeyTime = city.getTravelTime(city.fieldId, VALLEYS[X], GetTroops(TRP), 5) * MODIFIER
+journeyTime = city.getTravelTime(city.fieldId, GetFieldId(VALC), GetTroops(TRP), 5) * MODIFIER
 waittime = round( journeyTime * 2 / WAVES + 2)
- 
+
 label doIt
 execute "abandon " + VALC
 repeat 1
