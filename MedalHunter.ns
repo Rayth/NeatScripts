@@ -7,25 +7,28 @@
 //Fill in values below to cap and release a valley. used for medal farming.
 VALC = "xxx,yyy" //Coordinates of valley
 HERO = "any" //Hero string for attack
-WAVES = 6 //Number of waves to have at a time.
-MODIFIER = 1 //Use for adjustments such as when evony add buffs that slow march down (Thanksgiving 2015).Usually just leave at 1
+WAVES = 7 //Number of waves to have at a time.
 
 //------------STOP EDITING------------
-TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:8000,c:1,b:1,t:50","wo:1,w:1,s:1,p:1,sw:1,a:12800,c:1,b:10","wo:1,w:1,s:1,p:1,sw:1,a:25000,c:1,b:150"]
+TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:10000,c:1,b:1","wo:1,w:1,s:1,p:1,sw:1,a:15000,c:1,b:10","wo:1,w:1,s:1,p:1,sw:1,a:32000,c:1,b:150"]
 
 label gettroops
-id = GetFieldId(VALC)
-lev = GetLevel(id)
+lev = GetLevel(GetFieldId(VALC)
 TRP = TROOPS[lev-1]
 if (TRP == null) goto gettroops
 echo "Troops are: " + TRP
-journeyTime = city.getTravelTime(city.fieldId, GetFieldId(VALC), GetTroops(TRP), 5) * MODIFIER
-waittime = round( journeyTime * 2 / WAVES + 2)
+journeyTime = city.getTravelTime(city.fieldId, GetFieldId(VALC), GetTroops(TRP), 5)
+waittime = round( journeyTime * 2 / WAVES + 2) + 3
 
 label doIt
+if m_context.maintenanceStart goto maintWait
 execute "abandon " + VALC
-repeat 1
-sleep 3
 execute "attack " + VALC + " " + HERO + " " + TRP
 execute "sleep " + waittime
 loop doIt
+
+label maintWait
+if (lev < 10) execute "abandon " + VALC
+sleep 180
+if (m_context.maintenanceStart) loop maintWait
+goto gettroops
