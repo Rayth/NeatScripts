@@ -1,0 +1,36 @@
+ATTACK_TROOPS = "wo:1,w:1,s:1,p:1,sw:1,a:32000,c:1,b:500"
+VALLEY_COORDS = "XXX,YYY"
+WAVES = 8
+HEROES = "any,!trainer,!mayor"                //make sure heros are available for the no. of waves you set
+CAP_CITY_COORDS = "XXX,YYY"
+CAP_HEROES = "any,!fitzgerald,!timothy"
+CAP_TROOPS = "s:2500"
+MODIFIER = 35 //See notes for this setting
+//------Nothing to alter below here---------------------
+waittime = round( city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(ATTACK_TROOPS), 5) * 2 / WAVES + 2) + 3
+//-------------------------------------------------------
+label attackLoop
+if m_context.maintenanceStart echo "Sleeping for Maintenance"
+if m_context.maintenanceStart goto maintenanceTime
+START_TIME = date(date().time + ((city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(ATTACK_TROOPS), 5) + 60) * 1000) + 5).toString().split(" ")[3]
+startTimeSplit = START_TIME.split(":")
+seconds = (startTimeSplit[0] * 3600) + (startTimeSplit[1] * 60) + (startTimeSplit[2] * 1) - MODIFIER
+hour = floor(seconds/3600)*1
+minute = floor(seconds MOD 3600 /60)
+second = ((seconds MOD 3600 /60 - floor(seconds MOD 3600 /60)) * 60)
+if (second < 0) minute--
+if (second < 0) second = second+60
+if (minute < 0) hour--
+if (minute < 0) minute=minute+60
+if (hour < 0) hour=hour+24
+execute "abandon " + VALLEY_COORDS
+execute "attack " + VALLEY_COORDS + " " + HEROES + " " + ATTACK_TROOPS
+doThis = m_context.getCityManagerByFieldId(GetFieldId(CAP_CITY_COORDS)).script.callScript("attack " + VALLEY_COORDS + " " + CAP_HEROES + " " + CAP_TROOPS + " @:" + hour + ":" + minute + ":" + second)
+execute "sleep " + waittime
+goto attackLoop
+//------------------------------------------
+label maintenanceTime
+if !m_context.maintenanceStart echo "Resuming script after maintenance."
+if !m_context.maintenanceStart goto attackLoop
+sleep 30
+goto maintenanceTime
