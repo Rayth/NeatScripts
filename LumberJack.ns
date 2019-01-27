@@ -17,7 +17,7 @@ label attackLoop
 if m_context.maintenanceStart echo "Sleeping for Maintenance"
 if m_context.maintenanceStart goto maintenanceTime
 if (city.getAvailableTroop().archer < STOP_COUNT) echo "Archers running Low. Pausing."
-if (city.getAvailableTroop().archer < STOP_COUNT) goal "safevalleyfarm 7,8,9"
+if (city.getAvailableTroop().archer < STOP_COUNT) goal "safevalleyfarm 8,9,10"
 if (city.getAvailableTroop().archer < STOP_COUNT) goto lowTroops
 START_TIME = date(date().time + ((city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(TRP), 5) + 60) * 1000) + 5).toString().split(" ")[3]
 startTimeSplit = START_TIME.split(":")
