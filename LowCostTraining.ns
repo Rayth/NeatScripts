@@ -1,5 +1,5 @@
 HeroName = "Trainer"
-NPCCords = "xxx,yyy"
+NPCCoords = "xxx,yyy"
 label checkMe
 execute "waithero "+HeroName
 if (city.getAvailableTroop(true).militia >= 100000) goto theLock
