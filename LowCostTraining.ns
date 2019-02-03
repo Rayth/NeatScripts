@@ -1,0 +1,18 @@
+HeroName = "Trainer"
+NPCCords = "xxx,yyy"
+label checkMe
+execute "waithero "+HeroName
+if (city.getAvailableTroop(true).militia >= 100000) goto theLock
+sleep 180
+loop checkMe
+
+label theLock
+config wartown:2
+label attackLoop
+exewcute "attack "+NPCCoords+" "+HeroName+" w:3k"
+execute "waithero "+HeroName
+healtroopss
+sleep 3
+if (city.getAvailableTroop(true).militia > 3000) goto attackLoop
+config wartown:0
+goto checkMe
