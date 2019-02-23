@@ -1,26 +1,27 @@
+label restart
 VALLEY_COORDS = "XXX,YYY"
-WAVES = 8
-HEROES = "any,!Trainer,!any:politics=best"                //make sure heros are available for the no. of waves you set
+WAVES = 9
+HEROES = "any,!trainer"                //make sure heros are available for the no. of waves you set
 CAP_CITY_COORDS = "XXX,YYY"
-CAP_HEROES = "any,!Trainer,!any:politics=best"
+CAP_HEROES = "any,!trainer"
 CAP_TROOPS = "s:5000"
-MODIFIER = 35 //See Rayth about this number or read wiki page
-START_COUNT = 350000 //Number of archers to resume script at if we fall below stop count.
-STOP_COUNT = 300000 //Number of archers we cannot fall below to continue farming.
+MODIFIER = 35
+START_COUNT = 450000 //Number of archers to resume script at if we fall below stop count.
+STOP_COUNT = 400000 //Number of archers we cannot fall below to continue farming.
+USEMAYOR = "no" //Do we want to use mayor? If so will set nomayor:1
 //------Nothing to alter below here---------------------
 label maintResuming
+safevalleyfarm off
+if (USEMAYOR == "Yes") config nomayor:1
 gosub getTroops
 echo "Valley is Level "+lev+" so we will attack with: "+TRP
-waittime = round( city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(TRP), 5) * 2 / WAVES + 2) + 3
+waittime = round( (city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(TRP), 5) * 2) / WAVES + 2)
+if city.selfArmies.length > 0 goto resumeLoop
 //-------------------------------------------------------
 label attackLoop
-if m_context.maintenanceStart echo "Sleeping for Maintenance"
 if m_context.maintenanceStart goto maintenanceTime
-if (city.getAvailableTroop().archer < STOP_COUNT) echo "Archers running Low. Pausing."
-if (city.getAvailableTroop().archer < STOP_COUNT) goal "safevalleyfarm 8,9,10"
 if (city.getAvailableTroop().archer < STOP_COUNT) goto lowTroops
-START_TIME = date(date().time + ((city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(TRP), 5) + 60) * 1000) + 5).toString().split(" ")[3]
-startTimeSplit = START_TIME.split(":")
+startTimeSplit = (date(date().time + ((city.getTravelTime(city.fieldId, GetFieldId(VALLEY_COORDS), GetTroops(TRP), 5) + 60) * 1000) + 5).toString().split(" ")[3]).split(":")
 seconds = (startTimeSplit[0] * 3600) + (startTimeSplit[1] * 60) + (startTimeSplit[2] * 1) - MODIFIER
 hour = floor(seconds/3600)*1
 minute = floor(seconds MOD 3600 /60)
@@ -38,17 +39,23 @@ goto attackLoop
 //------------------------------------------
 label maintenanceTime
 if !m_context.maintenanceStart echo "Resuming script after maintenance."
-if !m_context.maintenanceStart goto maintResuming
+if !m_context.maintenanceStart goto restart
 sleep 30
 goto maintenanceTime
 
 label lowTroops
-if (city.getAvailableTroop().archer >= START_COUNT) echo "Resuming script now that we have archers again."
+echo "Archers below "+FormatNumber(STOP_COUNT)+". Pausing Script, turning on SafeValleyFarming."
+recallall
+goal "safevalleyfarm 7,8,9,10"
+goal "config nomayor:0"
+label troopCheckLoop
+if (city.getAvailableTroop().archer >= START_COUNT) echo "Resuming Farm script and disabling SVF"
 if (city.getAvailableTroop().archer >= START_COUNT) goto resumeLoop
 sleep 180
-goto lowTroops
+goto troopCheckLoop
 
 label resumeLoop
+Echo "Recalling all troops before doing anything else"
 safevalleyfarm off
 recallall
 Z = 0
@@ -62,17 +69,17 @@ label gotTime
 sleepHours = date(timeReturn).getHours()
 sleepMins = date(timeReturn).getMinutes()
 sleepSecs = date(timeReturn).getSeconds()+5
-if (sleepSecs > 60) sleepMins++
-if (sleepSecs > 60) sleepSecs = sleepSecs - 60
-if (sleepMins > 60) sleepHours++
-if (sleepMins > 60) sleepMins = sleepMins - 60
-if (sleepHours > 24) sleepHours = sleepHours - 24
+if (sleepSecs > 59) sleepMins++
+if (sleepSecs > 59) sleepSecs = sleepSecs - 60
+if (sleepMins > 59) sleepHours++
+if (sleepMins > 59) sleepMins = sleepMins - 60
+if (sleepHours > 23) sleepHours = sleepHours - 24
 sleepTime = sleepHours+":"+sleepMins+":"+sleepSecs
 execute "sleep @:" + sleepTime
-goto attackLoop
+goto maintResuming
 
 label getTroops
-TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:10000,c:1,b:1","wo:1,w:1,s:1,p:1,sw:1,a:16000,c:1,b:100","wo:1,w:1,s:1,p:1,sw:1,a:32000,c:1,b:500"]
+TROOPS = ["a:50","a:100","a:200","w:1,s:1,p:1,sw:1,a:400,wo:1","w:1,s:1,p:1,sw:1,c:1,a:800,wo:1","w:1,s:1,p:1,sw:1,c:1,a:1600,wo:1","w:1,s:1,p:1,sw:1,c:1,a:3200,wo:1","wo:1,w:1,s:1,p:1,sw:1,a:10000,c:1,b:100","wo:1,w:1,s:1,p:1,sw:1,a:16000,c:1,b:500","wo:1,w:1,s:1,p:1,sw:1,a:32000,c:1,b:1000"]
 lev = GetLevel(GetFieldId(VALLEY_COORDS))
 TRP = TROOPS[lev-1]
 return
