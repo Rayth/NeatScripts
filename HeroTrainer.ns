@@ -32,7 +32,7 @@ loop theLoop
 
 label waitForHour
 PAST = date().getTime() - TIME
-LEFT = 3600000-PAST
+LEFT = (3600000-PAST)/1000
 execute "sleep " + LEFT
 return
 
