@@ -12,3 +12,4 @@ label levelLoop
 execute "uplevelheroes "+DEFENDER
 repeat 2
 if (city.findHeroByName(DEFENDER).expLevels > 0) loop levelLoop
+return
