@@ -1,0 +1,14 @@
+//*************
+MAYOR = "MyMayor"
+DEFENDER = "BigHero"
+//=STOP EDITING HERE=====
+execute "setmayorbyname "+DEFENDER
+execute "setmayorbyname "+MAYOR
+if (city.findHeroByName(DEFENDER).expLevels > 0) gosub levelLoop
+sleep 180
+loop
+
+label levelLoop
+uplevelheroes Nephthys
+repeat 2
+if (city.findHeroByName(DEFENDER).expLevels > 0) loop levelLoop
