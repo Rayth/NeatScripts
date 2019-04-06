@@ -9,6 +9,6 @@ sleep 180
 loop
 
 label levelLoop
-uplevelheroes Nephthys
+execute "uplevelheroes "+DEFENDER
 repeat 2
 if (city.findHeroByName(DEFENDER).expLevels > 0) loop levelLoop
