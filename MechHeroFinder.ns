@@ -1,0 +1,39 @@
+//**********************
+//Modified hero finder. Will find a hero where base attack and intel are 130+
+//**********************
+HEROES_TO_FIND = 1
+
+//=============STOP EDITING================
+resetgoals
+config hero:0
+config nomayor:1
+setmayor none
+
+label recheck
+setfocus
+sleep 2
+if city.innHeroes.length < 1 goto recheck
+heroName = city.innHeroes[0].name
+trueInt = max(city.innHeroes[0].stratagem) - city.innHeroes[0].heroWithBaseToString.split(">")[4].split(max(city.innHeroes[0].stratagem))[1].replace("]","").split("-")[1].split(" ")[0]*1
+trueAtt = max(city.innHeroes[0].power) - city.innHeroes[0].heroWithBaseToString.split(">")[4].split(max(city.innHeroes[0].power))[1].replace("]","").split("-")[1].split(" ")[0]*1
+getspamhero
+if $error goto recheck
+
+if ((trueAtt+trueInt) >= 130) goto foundOne
+label fireHero
+sleep 15
+if ((trueAtt+trueInt) < 130) execute "firehero "+heroName
+if $error && city.heroes.length > 0 goto fireHero
+goto recheck
+
+label foundOne
+execute "renamehero "+heroName+" A"+trueAtt+"I"+trueInt
+if $error repeat
+HEROES_TO_FIND--
+if (HEROES_TO_FIND < 1) goto finishHiring
+goto recheck
+
+label finishHiring
+echo "Finished finding heroes."
+loadgoals 0
+end
