@@ -1,0 +1,55 @@
+//************************
+//Finds heroes. Best used in a level 1 Inn.
+//Default settings will look for minimum 69 base for 1 poltics, 1 intel and 2 attack heroes.
+//Please note: This script will disable goals while hunting for heroes and re-enable when done. Also ensure you have plenty of gold.
+//************************
+MIN_BASE = 69
+ATTACKERS = 2
+POLITICS = 1
+INTEL = 1
+
+//====STOP EDITING========//
+resetgoals
+config hero:0
+config nomayor:1
+setmayor none
+
+label recheck
+setfocus
+sleep 2
+if city.innHeroes.length < 1 goto recheck
+trueBase = max(city.innHeroes[0].power,city.innHeroes[0].stratagem,city.innHeroes[0].management) - city.innHeroes[0].heroWithBaseToString.split(">")[4].split(max(city.innHeroes[0].power,city.innHeroes[0].stratagem,city.innHeroes[0].management))[1].replace("]","").split("-")[1].split(" ")[0]*1
+heroName = city.innHeroes[0].name
+if (city.innHeroes[0].isAttackHero) heroType = "Attacker"
+if (city.innHeroes[0].isPoliticsHero) heroType = "Politics"
+if (city.innHeroes[0].isIntelHero) heroType = "Intel"
+getspamhero
+if $error goto recheck
+
+if (trueBase >= MIN_BASE) goto foundOne
+label fireHero
+sleep 15
+if (trueBase < MIN_BASE) execute "firehero "+heroName
+if $error && city.heroes.length > 0 goto fireHero
+goto recheck
+
+label foundOne
+if (heroType == "Attacker" && ATTACKERS < 1) execute "firehero "+heroName
+if (heroType == "Attacker" && ATTACKERS > 0) execute "renamehero "+heroName+" Attack"+trueBase
+if $error repeat
+if (heroType == "Attacker" && ATTACKERS > 0) ATTACKERS--
+if (heroType == "Politics" && POLITICS < 1) execute "firehero "+heroName
+if (heroType == "Politics" && POLITICS > 0) execute "renamehero "+heroName+" Poli"+trueBase
+if $error repeat
+if (heroType == "Politics" && POLITICS > 0) POLITICS--
+if (heroType == "Intel" && INTEL < 1) execute "firehero "+heroName
+if (heroType == "Intel" && INTEL > 0) execute "renamehero "+heroName+" Intel"+trueBase
+if $error repeat
+if (heroType == "Intel" && INTEL > 0) INTEL--
+if ((ATTACKERS < 1) && (POLITICS < 1) && (INTEL < 1)) goto finishHiring
+goto recheck
+
+label finishHiring
+echo "Finished finding heroes."
+loadgoals 0
+end
