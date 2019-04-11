@@ -1,0 +1,68 @@
+//*****************************
+//Mech levelling attack script
+//*****************************
+//This script will send excess troops at a target location using all heroes.
+//Ensure the defending city has full feasting hall and gates are open!
+//Defense troops: cp:30k,b:30k,s:100k
+//Defense walls: at:18332,ab:2
+//This script will start with ballista then catapults as they are only ones requiring abatis.
+//After first wave of phract, the abatis will die but are no longer required.
+//*****************************
+//SETTINGS
+TARGET_CITY = "297,11"
+TARGET = "Rayth" //Name of person to whisper at end
+KEEP_BALLS = 500000 //This section is number of troops to save and not kill.
+KEEP_PULTS = 500000
+KEEP_PHRACT = 1000000
+KEEP_RAMS = 500000
+KEEP_TRANS = 500000
+//=====================STOP EDITING===================================//
+
+config nomayor:1
+setmayor none
+
+if (city.getAvailableTroop().ballista > (KEEP_BALLS + 36998)) gosub ballsLoop
+if (city.getAvailableTroop().catapult > (KEEP_PULTS + 33332)) gosub pultLoop
+if (city.getAvailableTroop().heavyCavalry > (KEEP_PHRACT + 21110)) gosub phractLoop
+if (city.getAvailableTroop().batteringRam > (KEEP_RAMS + 24998)) gosub ramLoop
+if (city.getAvailableTroop().carriage > (KEEP_TRANS + 21998)) gosub transLoop
+goto endLevelling
+
+label ballsLoop
+waithero any
+healtroops
+if (city.getAvailableTroop(true).ballista-KEEP_BALLS > 36998) execute "attack {TARGET_CITY} any b:36999"
+if (city.getAvailableTroop().ballista > (KEEP_BALLS + 36998)) loop ballsLoop
+return
+
+label pultLoop
+waithero any
+healtroops
+if (city.getAvailableTroop(true).catapult-KEEP_PULTS > 33332) execute "attack {TARGET_CITY} any cp:33333"
+if (city.getAvailableTroop().catapult > (KEEP_PULTS + 33332)) loop pultLoop
+return
+
+label phractLoop
+waithero any
+healtroops
+if (city.getAvailableTroop(true).heavyCavalry-KEEP_PHRACT > 21110) execute "attack {TARGET_CITY} any cata:21111"
+if (city.getAvailableTroop().heavyCavalry > (KEEP_PHRACT + 21110)) loop phractLoop
+return
+
+label transLoop
+waithero any
+healtroops
+if (city.getAvailableTroop(true).carriage-KEEP_TRANS > 21998) execute "attack {TARGET_CITY} any t:21999"
+if (city.getAvailableTroop().carriage > (KEEP_TRANS + 21998)) loop transLoop
+return
+
+label ramLoop
+waithero any
+healtroops
+if (city.getAvailableTroop(true).carriage-KEEP_RAMS > 24998) execute "attack {TARGET_CITY} any r:24999"
+if (city.getAvailableTroop().carriage > (KEEP_RAMS + 24998)) loop transLoop
+return
+
+label endLevelling
+execute "whisper '{TARGET}' 'All Done'"
+end
