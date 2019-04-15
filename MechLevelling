@@ -5,11 +5,9 @@
 //Ensure the defending city has full feasting hall and gates are open!
 //Defense troops: cp:30k,b:30k,s:100k
 //Defense walls: at:18332,ab:2
-//This script will start with ballista then catapults as they are only ones requiring abatis.
-//After first wave of phract, the abatis will die but are no longer required.
 //*****************************
 //SETTINGS
-TARGET_CITY = "297,11"
+TARGET_CITY = "xxx,yyy" //city to attack
 TARGET = "Rayth" //Name of person to whisper at end
 KEEP_BALLS = 500000 //This section is number of troops to save and not kill.
 KEEP_PULTS = 500000
@@ -21,6 +19,12 @@ KEEP_TRANS = 500000
 config nomayor:1
 setmayor none
 
+//*******************************
+//There is a specific attack order here. Ranged troops are first as they require a 5k defense
+//to run without any losses to the defender. Hence have 1 abatis minimum. Once it runs out of
+//ranged troops, it will switch to cataphracts and the abatis will die, but then you will
+//continue with 0 loss.
+//*******************************
 if (city.getAvailableTroop().ballista > (KEEP_BALLS + 36998)) gosub ballsLoop
 if (city.getAvailableTroop().catapult > (KEEP_PULTS + 33332)) gosub pultLoop
 if (city.getAvailableTroop().heavyCavalry > (KEEP_PHRACT + 21110)) gosub phractLoop
