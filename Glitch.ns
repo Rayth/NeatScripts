@@ -1,0 +1,25 @@
+GLITCH_TO = "SomeCity" //Set as city to use if this city has 0 valleys.
+TROOPS = "t:100k"
+RES = "f:*"
+sleep @:06:30:00 //Change this to match around 2 hours before maintenance in your local time.
+//===================================STOP EDIT==========================//
+config wartown:2
+recallall
+
+if (city.fields.length > 0) GLITCH_TO = FieldIdToCoords(city.fields[0].id)
+
+label checkTime
+if ((m_context.serverHours >= 02) && (m_context.serverHours < 3) && (m_context.serverMinutes >= 5) && (m_context.serverMinutes < 22)) goto letsGlitch
+sleep 10
+loop checkTime
+
+label letsGlitch
+if (m_context.serverHours == 2 && m_context.serverMinutes < 22) execute "reinforce "+GLITCH_TO+" none "+TROOPS+" "+RES
+recallall
+if (m_context.serverHours == 2 && m_context.serverMinutes < 22) loop letsGlitch
+
+label endGlitch
+recallall
+repeat 5
+config wartown:0
+loadgoals 0
