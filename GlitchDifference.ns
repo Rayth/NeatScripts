@@ -1,0 +1,23 @@
+startRes = GetResources("f:0")
+startTroops = GetTroops("wo:0")
+WAVES = 0
+cities.forEach(CreateFunction("city,ind,arr","startTroops.add(city.cityManager.getAvailableTroop())||city.cityManager.estResource.addTo(startRes)"))
+
+label checkTime
+if ((m_context.serverHours = 2 && m_context.serverMinutes >= 36) || (m_context.serverHours > 2)) goto checkWavesIncoming
+sleep 60
+loop checkTime
+
+label checkWavesIncoming
+recallall
+cities.forEach(CreateFunction("city,ind,arr","WAVES+=city.cityManager.myArmies.length"))
+if (WAVES > 0) echo "Currently have {WAVES} total waves in our rally points. Waiting till they've recalled."
+if (WAVES > 0) sleep 60
+if (WAVES > 0) loop checkWavesIncoming
+
+label getFinalTotals
+endRes = GetResources("f:0")
+endTroops = GetTroops("wo:0")
+cities.forEach(CreateFunction("city,ind,arr","endTroops.add(city.cityManager.getAvailableTroop())||city.cityManager.estResource.addTo(endRes)"))
+
+Screen.commandLog.addEvent("{CenterPad("\nGAINED TROOPS:\n", 43, "=")}\nWorker: {FormatNumber(endTroops.peasants-startTroops.peasants)}\nWarriors: {FormatNumber(endTroops.militia-startTroops.militia)}\nScouts: {FormatNumber(endTroops.scouter-startTroops.scouter)}\nPikemen: {FormatNumber(endTroops.pikemen-startTroops.pikemen)}\nSwordsmen: {FormatNumber(endTroops.swordsmen-startTroops)}\nArcher: {FormatNumber(endTroops.archer-startTroops.archer)}\nCavalry: {FormatNumber(endTroops.lightCavalry-startTroops.lightCavalry)}\nCataphracts: {FormatNumber(endTroops.heavyCavalry-startTroops.heavyCavalry)}\nTransports: {FormatNumber(endTroops.carriage-startTroops.carriage)}\nBallista: {FormatNumber(endTroops.ballista-startTroops.ballista)}\nBattering Ram: {FormatNumber(endTroops.batteringRam-startTroops.batteringRam)}\nCatapult: {FormatNumber(endTroops.catapult-startTroops.catapult)}\n\n{CenterPad("\nRESOURCES GAINED:\n", 52, "=")}\nGold: {FormatNumber(endRes.gold-startRes.gold)}\nFood: {FormatNumber(endRes.food-startRes.food)}\nWood: {FormatNumber(endRes.wood-startRes.wood)}\nStone: {FormatNumber(endRes.stone-startRes.stone)}\nIron: {FormatNumber(endRes.iron-startRes.iron)}")
