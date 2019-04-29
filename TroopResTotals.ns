@@ -1,0 +1,8 @@
+// --------------------------------
+// Troop & Resource Totals. Modified from NeatPortal wiki to display troops in a more readable fashion and display value of resources.
+// --------------------------------
+res = GetResources("f:0")
+troops = GetTroops("a:0")
+upkeep = 0
+cities.forEach(CreateFunction("city,ind,arr","troops.add(city.cityManager.getAvailableTroop())||city.cityManager.estResource.addTo(res)||upkeep+=city.cityManager.resource.troopCostFood"))
+echo "{CenterPad("\nTOTAL TROOPS:\n", 43, "=")}\nWorker: {FormatNumber(troops.peasants)}\nWarriors: {FormatNumber(troops.militia)}\nScouts: {FormatNumber(troops.scouter)}\nPikemen: {FormatNumber(troops.pikemen)}\nSwordsmen: {FormatNumber(troops.swordsmen)}\nArcher: {FormatNumber(troops.archer)}\nCavalry: {FormatNumber(troops.lightCavalry)}\nCataphracts: {FormatNumber(troops.heavyCavalry)}\nTransports: {FormatNumber(troops.carriage)}\nBallista: {FormatNumber(troops.ballista)}\nBattering Ram: {FormatNumber(troops.batteringRam)}\nCatapult: {FormatNumber(troops.catapult)}\nUpkeep: {FormatNumber(upkeep)}\n\n{CenterPad("\nTOTAL RESOURCES:\n", 52, "=")}\nGold: {FormatNumber(res.gold)}\nFood: {FormatNumber(res.food)}\nWood: {FormatNumber(res.wood)}\nStone: {FormatNumber(res.stone)}\nIron: {FormatNumber(res.iron)}\nResource Value: {FormatNumber((res.food*SellPrice(0))+(res.wood*SellPrice(1))+(res.stone*SellPrice(2))+(res.iron*SellPrice(3))+res.gold)}"
